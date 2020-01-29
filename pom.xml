@@ -6,7 +6,11 @@
 
     <groupId>com.orange</groupId>
     <artifactId>mall</artifactId>
+    <packaging>pom</packaging>
     <version>1.0.0</version>
+    <modules>
+        <module>mbg</module>
+    </modules>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
