@@ -32,3 +32,7 @@ redis:
       authCode: "authCode:"
     expire:
       authCode: 120 # 验证码超期时间
+
+jwt:
+  secret:""
+  expiration: 7*24*60*60 #过期时间一周

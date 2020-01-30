@@ -11,8 +11,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -57,8 +55,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         //禁止缓存
         http.headers().cacheControl();
         //添加JWT filter
+//        http.addFilterBefore()
 
         //添加自定义未授权和未登录 返回
+//        http.
     }
 
     /**
@@ -87,13 +87,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      *
      * @return
      */
-    @Bean
-    public UserDetailsService userDetailsService() {
-        return username -> {
-            throw new UsernameNotFoundException("用户名或密码错误");
-        }
-    }
-
+//    @Bean
+//    public UserDetailsService userDetailsService() {
+//        return username -> {
+//            throw new UsernameNotFoundException("用户名或密码错误");
+//        }
+//    }
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
