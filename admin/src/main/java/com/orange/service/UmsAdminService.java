@@ -4,7 +4,9 @@ import com.orange.model.User;
 
 import java.util.List;
 
-public interface UserService {
+public interface UmsAdminService {
+    List<User> page(int pageNum, int pageSize);
+
     List<User> listAll();
 
     int insert(User user);

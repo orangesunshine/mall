@@ -1,8 +1,10 @@
 package com.orange.model;
 
+import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 
 public class User implements Serializable {
+    @ApiModelProperty(value = "主键")
     private Long id;
 
     private String username;
