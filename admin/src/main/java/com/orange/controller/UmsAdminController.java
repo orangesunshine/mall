@@ -1,61 +1,47 @@
 package com.orange.controller;
 
-import com.orange.api.CommonPage;
+import com.google.common.base.Throwables;
 import com.orange.api.CommonResult;
-import com.orange.model.User;
+import com.orange.model.UmsAdmin;
 import com.orange.service.UmsAdminService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 后台用户管理
  */
 @Api(tags = "UserController", value = "后台用户管理")
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/admin")
 public class UmsAdminController {
     @Autowired
     UmsAdminService umsAdminService;
 
-    @ApiOperation("用户列表（分页）")
-    @RequestMapping(value = "/page", method = RequestMethod.GET)
-    public CommonResult<CommonPage<User>> listPageUser(int pageNum, int pageSize) {
-        List<User> page = umsAdminService.page(pageNum, pageSize);
-        return CommonResult.success(CommonPage.restPage(page));
+    @ApiOperation("登录")
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public CommonResult<String> login(String username, String password) {
+        try {
+            return CommonResult.success(umsAdminService.login(username, password));
+        } catch (Exception e) {
+            return CommonResult.validateFailed(Throwables.getStackTraceAsString(e));
+        }
+
     }
 
 
-    @ApiOperation("用户列表（全部）")
-    @RequestMapping(value = "/all", method = RequestMethod.GET)
-    public CommonResult<List<User>> listAllUser() {
-        return CommonResult.success(umsAdminService.listAll());
+    @ApiOperation("注册")
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    public CommonResult<UmsAdmin> register(@RequestBody UmsAdmin admin) {
+        try {
+            return CommonResult.success(umsAdminService.register(admin));
+        } catch (Exception e) {
+            return CommonResult.failed(Throwables.getStackTraceAsString(e));
+        }
     }
 
-    @ApiOperation("新增用户")
-    @RequestMapping(value = "/insert", method = RequestMethod.POST)
-    CommonResult insertUser(@RequestBody User user) {
-        return CommonResult.message(umsAdminService.insert(user) > 0, "新增成功", "新增失败");
-    }
-
-    @ApiOperation("删除用户")
-    @RequestMapping(value = "/delete/{id}", method = RequestMethod.POST)
-    CommonResult deleteUser(@PathVariable("id") long id) {
-        return CommonResult.message(umsAdminService.delete(id) > 0, "删除成功", "删除失败");
-    }
-
-    @ApiOperation("更新用户")
-    @RequestMapping(value = "/update/{id}", method = RequestMethod.POST)
-    CommonResult updateUser(@PathVariable("id") long id, @RequestBody User user) {
-        return CommonResult.message(umsAdminService.update(id, user) > 0, "更新成功", "更新失败");
-    }
-
-    @ApiOperation("获取用户信息")
-    @RequestMapping(value = "/list/{id}", method = RequestMethod.GET)
-    CommonResult<User> listUser(@PathVariable("id") long id) {
-        return CommonResult.success(umsAdminService.list(id));
-    }
 }

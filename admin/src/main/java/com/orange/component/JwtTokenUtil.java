@@ -15,15 +15,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class JwtTokenUtils {
-    Logger LOGGER = LoggerFactory.getLogger(JwtTokenUtils.class.getSimpleName());
+public class JwtTokenUtil {
+    Logger LOGGER = LoggerFactory.getLogger(JwtTokenUtil.class.getSimpleName());
 
     final String CLAIM_KEY_CREATED = null;//负载：token创建时间 健
     final String CLAIM_KEY_USERNAME = "sub";//载：用户名 健
 
-    @Value("{jwt.expiration}")
-    long expiration = 120;//过期时长
-    @Value("{jwt.secret}")
+    @Value("${jwt.expiration}")
+    long expiration;//过期时长
+    @Value("${jwt.secret}")
     String secret;//密钥
 
     /**

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.orange.mapper.UmsRoleMapper">
+    <select id="getPermissionList" resultType="com.orange.mapper.UmsPermissionMapper.BaseResultMap">
+        select p.*
+        FROM ums_admin_role ar
+        LEFT JOIN ums_role r ON ar.admin_id =r.admin_id
+        LEFT JOIN ums_role_permission rp ON ar.admin_id = rp.admin_id
+        LEFT JOIN ums_permission p ON ar.admin_id = p.admin_id
+        where
+        ar.admin_id = #{adminId}
+
+    </select>
+</mapper>

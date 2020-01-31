@@ -1,7 +1,5 @@
 package com.orange.config;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -31,9 +29,9 @@ public class SwaggerConfig {
 //                .apis(RequestHandlerSelectors.withClassAnnotation(Api.class))//@Api注解生成api文档
 //                .apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))//@ApiOperation注解生成api文档
                 .paths(PathSelectors.any())
-                .build();
-//                .securitySchemes(securitySchemes())
-//                .securityContexts(securityContexts());
+                .build()
+                .securitySchemes(securitySchemes())
+                .securityContexts(securityContexts());
     }
 
     private ApiInfo apiInfo() {
@@ -61,7 +59,7 @@ public class SwaggerConfig {
         return result;
     }
 
-    private SecurityContext getContextByPath(String pathRegex){
+    private SecurityContext getContextByPath(String pathRegex) {
         return SecurityContext.builder()
                 .securityReferences(defaultAuth())
                 .forPaths(PathSelectors.regex(pathRegex))

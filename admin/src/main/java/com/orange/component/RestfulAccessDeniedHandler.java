@@ -1,6 +1,6 @@
 package com.orange.component;
 
-import com.alibaba.druid.support.json.JSONUtils;
+import cn.hutool.json.JSONUtil;
 import com.orange.api.CommonResult;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
@@ -23,7 +23,7 @@ public class RestfulAccessDeniedHandler implements AccessDeniedHandler {
                        AccessDeniedException e) throws IOException, ServletException {
         httpServletResponse.setCharacterEncoding("UTF-8");
         httpServletResponse.setContentType("application/json");
-        httpServletResponse.getWriter().println(JSONUtils.toJSONString(CommonResult.forbidden(null)));
+        httpServletResponse.getWriter().println(JSONUtil.toJsonPrettyStr(CommonResult.forbidden(null)));
         httpServletResponse.flushBuffer();
     }
 }

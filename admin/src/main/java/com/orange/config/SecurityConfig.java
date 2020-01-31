@@ -1,5 +1,11 @@
 package com.orange.config;
 
+import com.orange.component.JwtAuthenticationTokenFilter;
+import com.orange.component.RestAuthenticationEntryPoint;
+import com.orange.component.RestfulAccessDeniedHandler;
+import com.orange.dto.AdminUserDetails;
+import com.orange.model.UmsAdmin;
+import com.orange.model.UmsPermission;
 import com.orange.service.UmsAdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -11,8 +17,13 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import java.util.List;
 
 @EnableWebSecurity
 @Configuration
@@ -21,6 +32,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     UmsAdminService umsAdminService;
+    @Autowired
+    RestAuthenticationEntryPoint restAuthenticationEntryPoint;
+    @Autowired
+    RestfulAccessDeniedHandler restfulAccessDeniedHandler;
 
     /**
      * 用于配置需要拦截的url路径、jwt过滤器及出异常后的处理器；
@@ -55,10 +70,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         //禁止缓存
         http.headers().cacheControl();
         //添加JWT filter
-//        http.addFilterBefore()
+        http.addFilterBefore(jwtAuthenticationTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
         //添加自定义未授权和未登录 返回
-//        http.
+        http.exceptionHandling()
+                .accessDeniedHandler(restfulAccessDeniedHandler)
+                .authenticationEntryPoint(restAuthenticationEntryPoint);
     }
 
     /**
@@ -69,7 +86,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        super.configure(auth);
+        auth.userDetailsService(userDetailsService()).passwordEncoder(passwordEncoder());
     }
 
     /**
@@ -87,12 +104,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      *
      * @return
      */
-//    @Bean
-//    public UserDetailsService userDetailsService() {
-//        return username -> {
-//            throw new UsernameNotFoundException("用户名或密码错误");
-//        }
-//    }
+    @Bean
+    public UserDetailsService userDetailsService() {
+        return username -> {
+            UmsAdmin admin = umsAdminService.getAdminByUsername(username);
+            if (null != admin) {
+                List<UmsPermission> permissionList = umsAdminService.getPermissionList(admin.getId());
+                return new AdminUserDetails(admin, permissionList);
+            }
+            throw new UsernameNotFoundException("用户名或密码错误");
+        };
+    }
+
+    @Bean
+    public JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter() {
+        return new JwtAuthenticationTokenFilter();
+    }
+
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {

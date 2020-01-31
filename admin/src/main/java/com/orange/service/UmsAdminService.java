@@ -1,19 +1,41 @@
 package com.orange.service;
 
-import com.orange.model.User;
+import com.orange.model.UmsAdmin;
+import com.orange.model.UmsPermission;
 
 import java.util.List;
 
 public interface UmsAdminService {
-    List<User> page(int pageNum, int pageSize);
+    /**
+     * 根据用户名获取后台管理员
+     *
+     * @param username
+     * @return
+     */
+    UmsAdmin getAdminByUsername(String username);
 
-    List<User> listAll();
+    /**
+     * 注册
+     *
+     * @param umsAdmin
+     * @return
+     */
+    UmsAdmin register(UmsAdmin umsAdmin);
 
-    int insert(User user);
+    /**
+     * 登录
+     *
+     * @param username
+     * @param password
+     * @return
+     */
+    String login(String username, String password);
 
-    int delete(long id);
-
-    int update(long id, User user);
-
-    User list(long id);
+    /**
+     * 获取用户所有权限（包括角色+- 权限）
+     *
+     * @param adminId
+     * @return
+     */
+    List<UmsPermission> getPermissionList(long adminId);
 }

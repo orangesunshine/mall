@@ -34,5 +34,7 @@ redis:
       authCode: 120 # 验证码超期时间
 
 jwt:
-  secret:""
-  expiration: 7*24*60*60 #过期时间一周
+  tokenHeader: Authorization #jwt存储的请求头
+  tokenHead: Younger #Jwt 负载 开头
+  secret: orangesecret #jwt 加解密 密钥
+  expiration: 604800 #过期时间一周

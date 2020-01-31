@@ -1,5 +1,4 @@
 import com.orange.TestApplication;
-import com.orange.mapper.UserMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,11 +10,4 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest()
 @ContextConfiguration(classes = TestApplication.class)
 public class JavaTest {
-    @Autowired(required = false)
-    UserMapper userMapper;
-
-    @Test
-    public void test() {
-        System.out.println("null == userMapper " + (null == userMapper));
-    }
 }
