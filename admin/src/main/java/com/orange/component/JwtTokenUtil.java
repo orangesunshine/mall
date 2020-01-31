@@ -18,7 +18,7 @@ import java.util.Map;
 public class JwtTokenUtil {
     Logger LOGGER = LoggerFactory.getLogger(JwtTokenUtil.class.getSimpleName());
 
-    final String CLAIM_KEY_CREATED = null;//负载：token创建时间 健
+    final String CLAIM_KEY_CREATED = "created";//负载：token创建时间 健
     final String CLAIM_KEY_USERNAME = "sub";//载：用户名 健
 
     @Value("${jwt.expiration}")
@@ -125,6 +125,7 @@ public class JwtTokenUtil {
             Map<String, Object> claims = new HashMap<>();
             claims.put(CLAIM_KEY_USERNAME, userDetails.getUsername());
             claims.put(CLAIM_KEY_CREATED, new Date());
+            return generateToken(claims);
         }
         return null;
     }

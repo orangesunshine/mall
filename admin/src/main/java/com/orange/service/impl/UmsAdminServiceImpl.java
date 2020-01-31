@@ -1,19 +1,17 @@
 package com.orange.service.impl;
 
 import com.orange.component.JwtTokenUtil;
-import com.orange.exception.LoginException;
+import com.orange.dao.UmsPermissionByAdminJoinRoleMapper;
+import com.orange.exception.MallException;
 import com.orange.exception.OperationException;
 import com.orange.mapper.UmsAdminMapper;
 import com.orange.model.UmsAdmin;
 import com.orange.model.UmsAdminExample;
 import com.orange.model.UmsPermission;
 import com.orange.service.UmsAdminService;
-import javafx.fxml.LoadException;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,8 +24,10 @@ import java.util.List;
 
 @Service
 public class UmsAdminServiceImpl implements UmsAdminService {
-    @Autowired(required = false)
+    @Autowired
     UmsAdminMapper umsAdminMapper;
+    @Autowired
+    UmsPermissionByAdminJoinRoleMapper umsPermissionByAdminJoinRoleMapper;
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
@@ -50,8 +50,8 @@ public class UmsAdminServiceImpl implements UmsAdminService {
         admin.setCreateTime(new Date());
         admin.setStatus(1);
         //是否同名用户
-        if (null == getAdminByUsername(admin.getUsername()))
-            return null;
+        if (null != getAdminByUsername(admin.getUsername()))
+            throw new MallException("该用户已存在");
 
         String encode = passwordEncoder.encode(admin.getPassword());
         admin.setPassword(encode);
@@ -63,10 +63,10 @@ public class UmsAdminServiceImpl implements UmsAdminService {
     @Override
     public String login(String username, String password) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-        if (null == userDetails) throw new LoginException("用户不存在");
+        if (null == userDetails) throw new MallException("用户不存在");
 
         if (!passwordEncoder.matches(password, userDetails.getPassword()))
-            throw new LoginException("密码错误");
+            throw new MallException("密码错误");
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
         return jwtTokenUtil.generateToken(userDetails);
@@ -74,6 +74,6 @@ public class UmsAdminServiceImpl implements UmsAdminService {
 
     @Override
     public List<UmsPermission> getPermissionList(long adminId) {
-        return null;
+        return umsPermissionByAdminJoinRoleMapper.getPermissionList(adminId);
     }
 }

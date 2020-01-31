@@ -1,5 +1,6 @@
 package com.orange.service.impl;
 
+import com.orange.mapper.UmsRoleMapper;
 import com.orange.service.RedisService;
 import com.orange.service.UmsMemberService;
 import org.apache.commons.lang.StringUtils;
@@ -17,7 +18,6 @@ public class UmsMemberServiceImpl implements UmsMemberService {
     private String REDIS_KEY_PREFIX_AUTH_CODE;
     @Value("${redis.key.expire.authCode}")
     private Long AUTH_CODE_EXPIRE_SECONDS;
-
 
     @Override
     public String generatorCode(String telephone) {

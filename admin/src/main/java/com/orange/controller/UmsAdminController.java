@@ -1,16 +1,19 @@
 package com.orange.controller;
 
-import com.google.common.base.Throwables;
+import cn.hutool.json.JSONUtil;
 import com.orange.api.CommonResult;
 import com.orange.model.UmsAdmin;
 import com.orange.service.UmsAdminService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.HashMap;
 
 /**
  * 后台用户管理
@@ -21,14 +24,21 @@ import org.springframework.web.bind.annotation.RestController;
 public class UmsAdminController {
     @Autowired
     UmsAdminService umsAdminService;
+    @Value("${jwt.tokenHead}")
+    private String tokenHead;
 
     @ApiOperation("登录")
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public CommonResult<String> login(String username, String password) {
         try {
-            return CommonResult.success(umsAdminService.login(username, password));
+            String token = umsAdminService.login(username, password);
+            HashMap<Object, Object> params = new HashMap<>();
+            params.put("token", token);
+            params.put("tokenHead", tokenHead);
+
+            return CommonResult.success(JSONUtil.toJsonPrettyStr(params));
         } catch (Exception e) {
-            return CommonResult.validateFailed(Throwables.getStackTraceAsString(e));
+            return CommonResult.validateFailed(e.getClass().getSimpleName() + ": " + e.getMessage());
         }
 
     }
@@ -40,7 +50,7 @@ public class UmsAdminController {
         try {
             return CommonResult.success(umsAdminService.register(admin));
         } catch (Exception e) {
-            return CommonResult.failed(Throwables.getStackTraceAsString(e));
+            return CommonResult.failed(e.getClass().getSimpleName() + ": " + e.getMessage());
         }
     }
 
