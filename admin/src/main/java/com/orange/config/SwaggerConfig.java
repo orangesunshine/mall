@@ -30,6 +30,7 @@ public class SwaggerConfig {
 //                .apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))//@ApiOperation注解生成api文档
                 .paths(PathSelectors.any())
                 .build()
+                //通过修改配置实现调用接口自带Authorization头，这样就可以访问需要登录的接口了。
                 .securitySchemes(securitySchemes())
                 .securityContexts(securityContexts());
     }
