@@ -6,6 +6,7 @@ import com.orange.model.UmsAdmin;
 import com.orange.service.UmsAdminService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 
 /**
@@ -26,6 +28,8 @@ public class UmsAdminController {
     UmsAdminService umsAdminService;
     @Value("${jwt.tokenHead}")
     private String tokenHead;
+    @Value("${jwt.tokenHeader}")
+    private String tokenHeader;
 
     @ApiOperation("登录")
     @RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -40,7 +44,14 @@ public class UmsAdminController {
         } catch (Exception e) {
             return CommonResult.validateFailed(e.getClass().getSimpleName() + ": " + e.getMessage());
         }
+    }
 
+    @ApiOperation("刷新token")
+    @RequestMapping(value = "/refreshToken", method = RequestMethod.POST)
+    public CommonResult<String> refreshToken(HttpServletRequest request) {
+        String oldToken = request.getHeader(tokenHeader);
+        String refreshToken = umsAdminService.refreshToken(oldToken);
+        return CommonResult.message(StringUtils.isBlank(refreshToken), "token刷新成功", "token刷新失败", refreshToken);
     }
 
 

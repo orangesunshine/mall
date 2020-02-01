@@ -24,6 +24,10 @@ spring:
       repositories:
         enabled: true
       cluster-nodes: localhost:9300 #es连接地址及端口号
+    mongodb:
+      host: localhost # mongodb的连接地址
+      port: 27017 # mongodb的连接端口号
+      database: mall # mongodb的连接的数据库
   rabbitmq:
     host: localhost # rabbitmq的连接地址
     port: 5672 # rabbitmq的连接端口号

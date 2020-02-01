@@ -32,6 +32,13 @@ public interface UmsAdminService {
     String login(String username, String password);
 
     /**
+     * 刷新token的功能
+     *
+     * @param oldToken 旧的token
+     */
+    String refreshToken(String oldToken);
+
+    /**
      * 获取用户所有权限（包括角色+- 权限）
      *
      * @param adminId

@@ -12,6 +12,7 @@ import com.orange.service.UmsAdminService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -34,6 +35,8 @@ public class UmsAdminServiceImpl implements UmsAdminService {
     private JwtTokenUtil jwtTokenUtil;
     @Autowired
     private UserDetailsService userDetailsService;
+    @Value("${jwt.tokenHead}")
+    private String tokenHead;
 
     @Override
     public UmsAdmin getAdminByUsername(String username) {
@@ -70,6 +73,15 @@ public class UmsAdminServiceImpl implements UmsAdminService {
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
         return jwtTokenUtil.generateToken(userDetails);
+    }
+
+    @Override
+    public String refreshToken(String oldToken) {
+        String token = oldToken.substring(tokenHead.length());
+        if (jwtTokenUtil.canRefresh(token)) {
+            return jwtTokenUtil.refresh(oldToken);
+        }
+        return null;
     }
 
     @Override

@@ -21,7 +21,16 @@ public class CommonResult<T> {
      * @param sucMsg
      */
     public static CommonResult message(boolean success, String sucMsg, String errMsg) {
-        return new CommonResult(success ? ResultCode.SUCCESS.getCode() : ResultCode.FAILED.getCode(), success ? sucMsg : errMsg, null);
+        return message(success, sucMsg, errMsg, null);
+    }
+
+    /**
+     * 根据success状态，返回不同提示语
+     *
+     * @param sucMsg
+     */
+    public static <T> CommonResult<T> message(boolean success, String sucMsg, String errMsg, T t) {
+        return new CommonResult(success ? ResultCode.SUCCESS.getCode() : ResultCode.FAILED.getCode(), success ? sucMsg : errMsg, t);
     }
 
     /**
