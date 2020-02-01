@@ -10,8 +10,8 @@ public class OrderTimeOutCancelTask {
     private Logger LOGGER = LoggerFactory.getLogger(OrderTimeOutCancelTask.class.getSimpleName());
 
 
-    @Scheduled(cron = "0/10 * * ? * ?")
-    private void cancelTimeOutOrder() {
-        LOGGER.info("取消订单 测试");
-    }
+//    @Scheduled(cron = "0/10 * * ? * ?")
+//    private void cancelTimeOutOrder() {
+//        LOGGER.info("取消订单 测试");
+//    }
 }
