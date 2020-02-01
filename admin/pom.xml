@@ -12,6 +12,16 @@
     <artifactId>admin</artifactId>
 
     <dependencies>
+        <dependency>
+            <groupId>com.orange</groupId>
+            <artifactId>common</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.orange</groupId>
+            <artifactId>mbg</artifactId>
+            <version>1.0.0</version>
+        </dependency>
         <!--Swagger-UI API文档生产工具-->
         <dependency>
             <groupId>io.springfox</groupId>

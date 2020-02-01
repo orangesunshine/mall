@@ -1,6 +1,5 @@
 package com.orange.service.impl;
 
-import com.orange.mapper.UmsRoleMapper;
 import com.orange.service.RedisService;
 import com.orange.service.UmsMemberService;
 import org.apache.commons.lang.StringUtils;
